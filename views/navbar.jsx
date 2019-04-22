@@ -18,7 +18,8 @@ class Navbar extends React.Component {
         </a>
         <ul className="nav-list">
             <a href="/friends"><li><span>Find friends</span></li></a>
-            <a href={`tickets/id`}><li><span> My tickets</span></li></a>
+            <a href={`tickets`}><li><span>My tickets</span></li></a>
+            <a href="/invites"><li><span>My invites</span></li></a>
             <a href="/"><li><span>Logout</span></li></a>
         </ul>
     </navbar>

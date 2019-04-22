@@ -4,14 +4,26 @@ var Navbar = require("./navbar")
 
 class friendsResult extends React.Component {
   render() {
-    let searchResult = this.props.friends.map ( (friend) => {
-        return (
-            <li>
-                <h3>{friend.username}</h3>
-                <a className="addFriendButton" friendId={friend.id} href={`add/${friend.id}`}>Befriend this loser</a>
-            </li>
-        );
+    console.log(this.props.dataSet);
+    let searchResult = this.props.dataSet.search.map ( (search) => {
+        if (this.props.dataSet.friends[0].length > 0) {
+            //alr friends
+            return (
+                <li>
+                    <h3>{search.username}</h3>
+                    <span id="associate" myId={this.props.dataSet.self[0].id} friendId={search.id}>you alr friends w this lüser</span>
+                </li>
+            );
+        } else {
+            return (
+                <li>
+                    <h3>{search.username}</h3>
+                    <span id="associate" myId={this.props.dataSet.self[0].id} friendId={search.id} style={{"cursor": "pointer"}}>Befriend this lüser</span>
+                </li>
+            );
+        }
     })
+
 
     return (
     <DefaultLayout>

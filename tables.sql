@@ -24,12 +24,17 @@ CREATE TABLE IF NOT EXISTS concerts (
 CREATE TABLE IF NOT EXISTS tickets (
     id SERIAL PRIMARY KEY,
     concert_id INTEGER,
-    user_id INTEGER,
-    barcode TEXT,
-    status TEXT
+    users_id INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS friends (
     users_id INTEGER,
     friends_id INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS invites (
+    id SERIAL PRIMARY KEY,
+    users_id INTEGER,
+    friends_id INTEGER,
+    concert_id INTEGER
 );

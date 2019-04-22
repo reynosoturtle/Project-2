@@ -93,16 +93,187 @@ module.exports = (dbPoolInstance) => {
     };
 
     let searchFriendResult = (data, doneWithQuery) => {
-        let query = "SELECT * FROM users WHERE username='" + data.username +"'";
+        let searchResults = "SELECT * FROM users WHERE username='" + data.search +"'";
 
-        dbPoolInstance.query(query, (error, queryResult) => {
+        dbPoolInstance.query(searchResults, (error, searchQueryResult) => {
             if ( error ){
+                console.log("IS THE ERROR HERE????")
                 doneWithQuery(error, null);
             } else {
-                doneWithQuery(queryResult.rows);
+                // let search = { search: searchQueryResult.rows };
+                // console.log(search)
+                let friendsStatus = "SELECT friends.users_id, friends.friends_id, users.username " +
+                                    "FROM users INNER JOIN friends " +
+                                    "ON (friends.users_id = users.id) " +
+                                    "WHERE username='" + data.userCookie +"'";
+
+                dbPoolInstance.query(friendsStatus, (error, friendsStatusQueryResult) => {
+                    if (error) {
+                        console.log("OR HEREEE??!?!?!?")
+                        doneWithQuery(error, null);
+                    } else {
+                        let selfData = "SELECT * FROM users WHERE username='" + data.userCookie +"'";
+                        dbPoolInstance.query(selfData, (error, selfDataQueryResult) => {
+                            let something = { friends: friendsStatusQueryResult.rows, search: searchQueryResult.rows, self: selfDataQueryResult.rows }
+                            doneWithQuery(something);
+                        })
+                    }
+                })
             }
         });
     };
+
+    let friendAdded = (data, doneWithQuery) => {
+        console.log(data)
+        let query = "INSERT INTO friends (users_id, friends_id) VALUES ($1, $2)";
+        let values = [data.myId, data.friendId];
+
+        dbPoolInstance.query(query, values, (error, result) => {
+            if (error) {
+                console.log(error);
+            } else {
+                let secondQuery = "INSERT INTO friends (users_id, friends_id) VALUES ($1, $2)";
+                let secondValues = [data.friendId, data.myId];
+                dbPoolInstance.query(secondQuery, secondValues, (error, result) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        doneWithQuery({friendAdded: true});
+                    }
+                });
+            }
+        })
+    }
+
+    let purchaseListOfFriends = (data, doneWithQuery) => {
+        let selfData = "SELECT * FROM users WHERE username='" + data.userCookie +"'";
+        dbPoolInstance.query(selfData, (error, selfDataQueryResult) => {
+            let myId = selfDataQueryResult.rows[0].id;
+            if (error) {
+                console.log(error);
+            } else {
+                let friendsList =   "SELECT users.id, users.username " +
+                                    "FROM users INNER JOIN friends " +
+                                    "ON (friends.users_id = users.id) " +
+                                    "WHERE friends.friends_id = '" + myId +"'";
+                dbPoolInstance.query(friendsList, (error, friendsListQueryResult) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        let concertDetails = "SELECT * FROM concerts WHERE id='" + data.concertId + "'";
+                        dbPoolInstance.query(concertDetails, (error, concertDetailsQueryResult) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                let something = {concert: concertDetailsQueryResult.rows, friends: friendsListQueryResult.rows, self: selfDataQueryResult.rows};
+                                doneWithQuery(something);
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    };
+
+    let purchasePayment = (data, doneWithQuery) => {
+        let selfData = "SELECT * FROM users WHERE username='" + data.userCookie +"'";
+        dbPoolInstance.query(selfData, (error, selfDataQueryResult) => {
+            let myId = selfDataQueryResult.rows[0].id;
+            if (error) {
+                console.log("LANJIAO")
+                console.log(error);
+            } else {
+                let invited = "INSERT INTO invites (users_id, friends_id, concert_id) VALUES ($1, $2, $3)";
+                let values = [myId, data.friendId, data.concertId];
+                dbPoolInstance.query(invited, values, (error, invitedQueryResult) => {
+                    if (error) {
+                        console.log("PLEASE LA");
+                        console.log(error);
+                    } else {
+                        let concertDetails = "SELECT * FROM concerts WHERE id='" + data.concertId + "'";
+                        dbPoolInstance.query(concertDetails, (error, concertDetailsQueryResult) => {
+                            let something = {concert: concertDetailsQueryResult.rows}
+                            doneWithQuery(something);
+                        })
+                    }
+                })
+            }
+        })
+    }
+
+    let purchaseTicket = (data, doneWithQuery) => {
+        let selfData = "SELECT * FROM users WHERE username='" + data.userCookie +"'";
+        dbPoolInstance.query(selfData, (error, selfDataQueryResult) => {
+            let myId = selfDataQueryResult.rows[0].id;
+            if (error) {
+                console.log("LANJIAO")
+                console.log(error);
+            } else {
+                let ticketBought = "INSERT INTO tickets (concert_id, users_id) VALUES ($1, $2)";
+                let values = [data.concertId, myId];
+                dbPoolInstance.query(ticketBought, values, (error, queryResult) => {
+                    if (error) {
+                        console.log("CHAOCHEEBAI")
+                        console.log(error);
+                    } else {
+                        doneWithQuery({purchase: true});
+                    }
+                })
+            }
+        })
+    };
+
+    let viewTickets = (data, doneWithQuery) => {
+        let selfData = "SELECT * FROM users WHERE username='" + data.userCookie +"'";
+        dbPoolInstance.query(selfData, (error, selfDataQueryResult) => {
+            let myId = selfDataQueryResult.rows[0].id;
+            if (error) {
+                console.log("LANJIAO")
+                console.log(error);
+            } else {
+                let listOfTickets = "SELECT concerts.artist, concerts.picture " +
+                                    "FROM tickets " +
+                                    "INNER JOIN concerts ON (concerts.id = tickets.concert_id) " +
+                                    "INNER JOIN users ON (users.id = tickets.users_id) " +
+                                    "WHERE users.id = '" +myId+ "'";
+                dbPoolInstance.query(listOfTickets, (error, listOfTicketsQueryResult) => {
+                    if (error) {
+                        console.log("??!?!!?!")
+                        console.log(error)
+                    } else {
+                        let something = {tickets: listOfTicketsQueryResult.rows};
+                        doneWithQuery(something);
+                    }
+                })
+            }
+        });
+    }
+
+    let viewInvites = (data, doneWithQuery) => {
+        let selfData = "SELECT * FROM users WHERE username='" + data.userCookie +"'";
+        dbPoolInstance.query(selfData, (error, selfDataQueryResult) => {
+            let myId = selfDataQueryResult.rows[0].id;
+            if (error) {
+                console.log("LANJIAO")
+                console.log(error);
+            } else {
+                let listOfInvites = "SELECT concerts.artist, concerts.picture, concerts.id " +
+                                    "FROM invites " +
+                                    "INNER JOIN concerts ON (concerts.id = invites.concert_id) " +
+                                    "INNER JOIN users ON (users.id = invites.friends_id) " +
+                                    "WHERE users.id = '" +myId+ "'";
+                dbPoolInstance.query(listOfInvites, (error, listOfInvitesQueryResult) => {
+                    if (error) {
+                        console.log("??!?!!?!")
+                        console.log(error)
+                    } else {
+                        let something = {invites: listOfInvitesQueryResult.rows};
+                        doneWithQuery(something);
+                    }
+                })
+            }
+        });
+    }
 
   return {
     getAllConcerts,
@@ -110,5 +281,11 @@ module.exports = (dbPoolInstance) => {
     registerComplete,
     loginComplete,
     searchFriendResult,
+    friendAdded,
+    purchaseListOfFriends,
+    purchasePayment,
+    purchaseTicket,
+    viewTickets,
+    viewInvites,
   };
 };

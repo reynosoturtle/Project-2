@@ -83,16 +83,102 @@ module.exports = db => {
 
   let friendSearchResultControllerCallback = (request, response) => {
     let data = {
-        username: request.body.search,
+        search: request.body.search,
+        userCookie: request.cookies.username
     }
 
     const doneWithQuery = (data) => {
-        const friends = { friends: data}
+        const friends = {dataSet: data}
         response.render('friendsResult', friends);
     };
 
     db.TicketApp.searchFriendResult(data, doneWithQuery);
   };
+
+  let friendAddedResultControllerCallback = (request, response) => {
+    let data = {
+        myId: request.body.myId,
+        friendId: request.body.friendId
+    }
+
+    const doneWithQuery = (data) => {
+        response.send(data);
+    }
+
+    db.TicketApp.friendAdded(data, doneWithQuery);
+  }
+
+  let inviteFriendsControllerCallback = (request, response) => {
+    let data = {
+        concertId: request.params.id,
+        userCookie: request.cookies.username
+    }
+
+    const doneWithQuery = (data) => {
+        const friends = {dataSet: data}
+        console.log(friends)
+        response.render('invite', friends);
+    };
+
+    db.TicketApp.purchaseListOfFriends(data, doneWithQuery);
+  }
+
+  let paymentControllerCallback = (request, response) => {
+    let data = {
+        userCookie: request.cookies.username,
+        concertId: request.params.id,
+        friendId: request.body.invitedFriend
+    }
+
+    const doneWithQuery = (data) => {
+        const concert = {concert: data}
+        response.render('purchase', concert);
+    };
+
+    db.TicketApp.purchasePayment(data, doneWithQuery);
+  }
+
+  let purchasedControllerCallback = (request, response) => {
+    let data = {
+        userCookie: request.cookies.username,
+        concertId: request.body.concertId
+    }
+
+    const doneWithQuery = (data) => {
+        const ticket = {purchasedTicket: data}
+        response.redirect("/home");
+    };
+
+    db.TicketApp.purchaseTicket(data, doneWithQuery);
+  }
+
+  let viewTicketsControllerCallback = (request, response) => {
+    let data = {
+        userCookie: request.cookies.username
+    }
+
+    const doneWithQuery = data => {
+        const ticketList = {tickets: data};
+        response.render('tickets', data);
+    }
+
+    db.TicketApp.viewTickets(data, doneWithQuery);
+  }
+
+  let viewInvitesControllerCallback = (request, response) => {
+    let data = {
+        userCookie: request.cookies.username
+    }
+
+    const doneWithQuery = data => {
+        const inviteList = {invites: data};
+        response.render('invites', data);
+    }
+
+    db.TicketApp.viewInvites(data, doneWithQuery);
+  }
+
+
   return {
     landing: landingControllerCallback,
     index: indexControllerCallback,
@@ -103,5 +189,11 @@ module.exports = db => {
     loginComplete: loginCompleteControllerCallback,
     addFriends: findFriendsControllerCallback,
     friendSearchResult: friendSearchResultControllerCallback,
+    friendAdded: friendAddedResultControllerCallback,
+    inviteFriends: inviteFriendsControllerCallback,
+    payment: paymentControllerCallback,
+    purchase: purchasedControllerCallback,
+    viewTickets: viewTicketsControllerCallback,
+    viewInvites:  viewInvitesControllerCallback,
   };
 };

@@ -10,5 +10,5 @@ INSERT INTO concerts (artist, ticket_price, day, month, year, time, details, ven
 
 
 /* tickets */
-INSERT INTO tickets (concert_id, user_id, barcode, status) VALUES ('1', '1', 'Fake ass barcode', 'confirmed');
-INSERT INTO tickets (concert_id, user_id, barcode, status) VALUES ('1', '2', 'Fake ass barcode', 'pending');
+-- INSERT INTO tickets (concert_id, user_id, barcode, status) VALUES ('1', '1', 'Fake ass barcode', 'confirmed');
+-- INSERT INTO tickets (concert_id, user_id, barcode, status) VALUES ('1', '2', 'Fake ass barcode', 'pending');
