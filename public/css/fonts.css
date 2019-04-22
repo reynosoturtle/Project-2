@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'Futura-Std-Bold_19042';
+  src: url('/fonts/Futura-Std-Bold_19042.eot');
+  src: url('/fonts/Futura-Std-Bold_19042.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/Futura-Std-Bold_19042.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FuturaStd-Bold';
+  src: url('/fonts/FuturaStd-Bold.svg#FuturaStd-Bold') format('svg'),
+       url('/fonts/FuturaStd-Bold.ttf') format('truetype'),
+       url('/fonts/FuturaStd-Bold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura-Std-Book_19044';
+  src: url('/fonts/Futura-Std-Book_19044.eot');
+  src: url('/fonts/Futura-Std-Book_19044.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/Futura-Std-Book_19044.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FuturaStd-Book';
+  src: url('/fonts/FuturaStd-Book.svg#FuturaStd-Book') format('svg'),
+       url('/fonts/FuturaStd-Book.ttf') format('truetype'),
+       url('/fonts/FuturaStd-Book.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura-Std-Heavy_19050';
+  src: url('/fonts/Futura-Std-Heavy_19050.eot');
+  src: url('/fonts/Futura-Std-Heavy_19050.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/Futura-Std-Heavy_19050.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FuturaStd-Heavy';
+  src: url('/fonts/FuturaStd-Heavy.svg#FuturaStd-Heavy') format('svg'),
+       url('/fonts/FuturaStd-Heavy.ttf') format('truetype'),
+       url('/fonts/FuturaStd-Heavy.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
